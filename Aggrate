@@ -1,0 +1,75 @@
+query array of array
+
+[
+  {
+    "_id": 2,
+    "cafes": [
+      {
+        "id": "c1",
+        "assignedOrders": [
+          1,
+          2
+        ],
+        
+      },
+      {
+        "id": "c3",
+        "assignedOrders": [
+          2
+        ],
+        
+      },
+      {
+        "id": "c4",
+        "assignedOrders": [
+          11,
+          11,
+          1
+        ],
+        
+      },
+      {
+        "id": "c5",
+        "assignedOrders": [
+          1,
+          2,
+          4,
+          5,
+          6
+        ],
+        
+      },
+      
+    ]
+  }
+]
+
+
+
+
+query
+db.collection.aggregate([
+  {
+    "$match": {
+      _id: 2
+    }
+  },
+  {
+    $unwind: "$cafes"
+  },
+  {
+    "$addFields": {
+      "cafes_size": {
+        "$size": "$cafes.assignedOrders"
+      }
+    }
+  },
+  {
+    "$sort": {
+      "cafes_size": 1
+    }
+  },
+  {
+    "$limit": 1
+  }
+])
